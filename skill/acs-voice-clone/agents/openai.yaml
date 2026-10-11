@@ -1,0 +1,4 @@
+interface:
+  display_name: "本人声音克隆配音"
+  short_description: "复用已授权本人声音，离线生成中文旁白，支持局部重做与文字核对"
+  default_prompt: "使用 $acs-voice-clone，用我已授权的声音为这段文案生成旁白，并核对是否有漏字或错读。"

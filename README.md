@@ -2,17 +2,18 @@
 
 这是我持续维护的 AI 工具库。每个工具叫一个 **Skill**，可以理解成给 AI 用的工作说明书。
 
-目前有三个工具，按你要做的事选择即可：
+目前有四个工具，按你要做的事选择即可：
 
 | 你想做什么 | 工具 | 说明入口 |
 | --- | --- | --- |
 | 给知识库建立目录和管理规则 | 知识库初始化 · `acs-knowledge-governance-bootstrap` | [查看说明](skill/acs-knowledge-governance-bootstrap/README.md) |
 | 日常查资料、入库、更新项目情况 | 第二大脑管理器 · `acs-second-brain-manager` | [查看说明](skill/acs-second-brain-manager/README.md) |
 | 把本地音视频整理成文字 | 音视频文字提取 · `acs-video-script-extractor` | [查看说明](skill/acs-video-script-extractor/README.md) |
+| 用本人授权声音给文案配音 | 本人声音克隆配音 · `acs-voice-clone` | [查看说明](skill/acs-voice-clone/README.md) |
 
 **两个知识库工具可以独立使用，不用都装。** 初始化工具把规则和检查工具放进你的知识库，之后 AI 可以直接按库内规则工作；管理器用于持续查询、入库和更新。已有规则会优先沿用。
 
-第一次使用，先看 **[新手入门](docs/新手入门.md)**，里面有三个工具各自的使用方法和可复制提示词。
+第一次使用，先看 **[新手入门](docs/新手入门.md)**，里面有四个工具各自的使用方法和可复制提示词。
 
 ## 怎么开始
 
@@ -27,7 +28,7 @@
 
 AI 工具需要支持加载 Skill、访问本地文件和执行相应命令。音视频转写还需要本地模型和依赖，先让 AI 检查环境。
 
-## 三个工具分别做什么
+## 四个工具分别做什么
 
 ### 1. 知识库初始化
 
@@ -53,9 +54,17 @@ AI 工具需要支持加载 Skill、访问本地文件和执行相应命令。�
 
 [详细说明](skill/acs-video-script-extractor/README.md) · [快速开始](skill/acs-video-script-extractor/docs/quick-start.md)
 
+### 4. 本人声音克隆配音
+
+在 Apple Silicon Mac 上，用本人明确授权的声音把文案合成为中文旁白。支持分段生成、断点复用、单段重做，以及本地 Whisper 文字核对。
+
+本包不含声音样本或模型，须先准备本地环境与本人授权参考录音；不会自动上传声音或发布作品。
+
+[详细说明](skill/acs-voice-clone/README.md) · [环境与初始化](skill/acs-voice-clone/references/runtime.md)
+
 ## 仓库目录
 
-下面只展示主要入口，三个工具使用同一层级：
+下面只展示主要入口，四个工具使用同一层级：
 
 ```text
 acskill/
@@ -65,7 +74,8 @@ acskill/
 └── skill/
     ├── acs-knowledge-governance-bootstrap/   # 知识库初始化
     ├── acs-second-brain-manager/             # 第二大脑管理器
-    └── acs-video-script-extractor/           # 音视频文字提取
+    ├── acs-video-script-extractor/           # 音视频文字提取
+    └── acs-voice-clone/                      # 本人声音克隆配音
 ```
 
 每个工具里的文件分工：
@@ -81,3 +91,4 @@ acskill/
 | `agents/` | Agent 接口配置 |
 
 部分工具还有 `templates/`，用于提供可复用模板。第一次使用只需从[新手入门](docs/新手入门.md)开始，其他文件按需要阅读。
+
