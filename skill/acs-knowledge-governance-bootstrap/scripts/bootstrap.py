@@ -11,7 +11,7 @@ import tempfile
 PACKAGE = Path(__file__).resolve().parents[1]
 START = '<!-- acs-governance:start -->'
 END = '<!-- acs-governance:end -->'
-VERSION = '1.1'
+VERSION = '1.1.1'
 
 
 def digest(data):
