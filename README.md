@@ -20,7 +20,7 @@
 把仓库链接和你的需求一起交给 AI：
 
 ```text
-请阅读这个仓库：https://github.com/iamaresfive-code/acskill
+请阅读这个仓库：https://github.com/iamaresfive/acskill
 我想做的是：【填写你的需求】。
 请帮我选择合适的 Skill，检查当前工具和电脑环境是否支持，并指导我安装和使用。
 第一次先查看现有资料，告诉我准备怎么做，等我确认后再修改。
