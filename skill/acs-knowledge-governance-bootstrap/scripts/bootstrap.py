@@ -11,7 +11,7 @@ import tempfile
 PACKAGE = Path(__file__).resolve().parents[1]
 START = '<!-- acs-governance:start -->'
 END = '<!-- acs-governance:end -->'
-VERSION = '1.1.1'
+VERSION = '1.1.2'
 
 
 def digest(data):
@@ -78,8 +78,13 @@ def config_for(root, mode, custom):
     for value in c['existing_rules']:
         if not local(root, value).is_file(): raise ValueError('existing rule missing: '+value)
     if c['full_index']:
-        local(root, c['full_index'])
-        if c['full_index'] in {'AGENTS.md','目录.md'} or c['full_index'].startswith(c['governance_dir']+'/'):
+        index = local(root, c['full_index'])
+        scopes = [local(root, value) for value in paths]
+        if index.is_dir() or any(index == folder or index in folder.parents for folder in scopes):
+            raise ValueError('full_index must be a file path and must not replace a configured directory')
+        if any(local(root, value) in index.parents for value in c['source_roots']):
+            raise ValueError('full_index must be outside source roots; indexes are mutable')
+        if index in {root/'AGENTS.md', root/'目录.md'} or local(root,c['governance_dir']) in index.parents:
             raise ValueError('index collides with governance targets')
     if mode == 'existing':
         for value in c['knowledge_roots'] + c['source_roots']:

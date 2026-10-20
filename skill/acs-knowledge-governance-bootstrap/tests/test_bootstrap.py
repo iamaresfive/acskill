@@ -79,6 +79,43 @@ class BootstrapTests(unittest.TestCase):
             with self.subTest(c=c), self.assertRaises(ValueError): self.plan(config=c)
         (self.v/'Notes').symlink_to(self.home)
         with self.assertRaises(ValueError): self.plan('existing',{'knowledge_roots':['Notes']})
+    def test_index_cannot_replace_a_directory(self):
+        for index in ['知识', '原始材料', '规范与工具', '规范与工具/']:
+            with self.subTest(index=index), self.assertRaises(ValueError):
+                self.plan(config={'full_index':index},name='directory-index')
+            self.assertEqual(list(self.v.iterdir()),[])
+            self.assertFalse((self.home/'directory-index').exists())
+        # A file target cannot also be an ancestor of a configured directory.
+        with self.assertRaises(ValueError):
+            self.plan(config={'knowledge_roots':['资料/知识'],'full_index':'资料'},name='ancestor-index')
+        self.assertEqual(list(self.v.iterdir()),[])
+        (self.v/'Notes/Topic').mkdir(parents=True)
+        with self.assertRaises(ValueError):
+            self.plan('existing',{'knowledge_roots':['Notes'],'full_index':'Notes/Topic'},'existing-directory-index')
+        self.assertFalse((self.home/'existing-directory-index').exists())
+    def test_index_cannot_be_inside_sources(self):
+        for index in ['原始材料/索引.md', '原始材料//索引.md', '原始材料/专题/索引.md']:
+            with self.subTest(index=index), self.assertRaises(ValueError):
+                self.plan(config={'full_index':index,'modules':['source-hashes']},name='source-index')
+            self.assertEqual(list(self.v.iterdir()),[])
+            self.assertFalse((self.home/'source-index').exists())
+        (self.v/'Notes').mkdir(); (self.v/'Attachments').mkdir()
+        source=self.v/'Attachments/Index.md'; source.write_text('# Original index\n')
+        with self.assertRaises(ValueError):
+            self.plan('existing',{'knowledge_roots':['Notes'],'source_roots':['Attachments'],
+                                 'full_index':'Attachments/Index.md'},'existing-source-index')
+        self.assertEqual(source.read_text(),'# Original index\n')
+        self.assertFalse((self.v/'AGENTS.md').exists())
+        self.assertFalse((self.home/'existing-source-index').exists())
+    def test_knowledge_index_can_change_without_changing_sources(self):
+        b.apply(self.plan(config={'full_index':'知识/总索引.md','modules':['source-hashes']}),True)
+        candidate=self.home/'hash.json'
+        self.assertEqual(self.run_tool('原件校验.py','prepare',candidate).returncode,0)
+        self.assertEqual(self.run_tool('原件校验.py','commit',candidate).returncode,0)
+        (self.v/'知识/笔记.md').write_text('# Note\n')
+        (self.v/'知识/总索引.md').write_text('# Index\n[[知识/笔记]]\n')
+        result=self.run_tool('治理检查.py'); self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+        self.assertEqual(self.run_tool('原件校验.py','check').returncode,0)
     def test_candidate_tampering(self):
         p=self.plan(); data=json.loads(p.read_text()); payload=p.parent/data['actions'][0]['payload']; payload.write_text('changed')
         with self.assertRaises(ValueError): b.apply(p,True)
