@@ -16,7 +16,9 @@ def main():
     spec=importlib.util.spec_from_file_location('links',here/'链接检查.py')
     links=importlib.util.module_from_spec(spec); spec.loader.exec_module(links)
     command=[sys.executable,str(here/'链接检查.py'),str(root)]
-    for scope in c['source_roots']+[c['governance_dir']+'/模板']:
+    # Skill packages have their own document conventions and repeated SKILL.md
+    # names. Check their indexed entry links, not package-internal examples.
+    for scope in c['source_roots']+[c['governance_dir']+'/模板',c['governance_dir']+'/工具/Skill']:
         command.extend(['--exclude-content',scope])
     p=subprocess.run(command,capture_output=True,text=True)
     if p.returncode: raise RuntimeError(p.stderr)
@@ -42,7 +44,7 @@ def main():
             if missing: errors.append({'index_missing':missing})
             if duplicates: errors.append({'index_duplicate':duplicates})
     report.update(knowledge_pages=len(knowledge),errors=errors,
-                  coverage='local links and configured full index only; no semantic, source hash or external URL validation')
+                  coverage='local links and configured full index only; Skill entry links are checked, package contents/runtime, semantics, source hashes and external URLs are not validated')
     print(json.dumps(report,ensure_ascii=False,indent=2))
     return 2 if errors else 0
 if __name__=='__main__':

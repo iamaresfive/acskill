@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -48,6 +49,65 @@ class BootstrapTests(unittest.TestCase):
         self.assertFalse((self.v/'知识').exists())
         self.assertEqual(b.apply(p,True)['installed'],0)
         p2=self.plan('existing',c,'again'); self.assertEqual(b.apply(p2,True)['installed'],0)
+    def test_copied_vault_runs_without_original_vault_or_initializer(self):
+        from unittest.mock import patch
+        package=self.home/'initializer'; shutil.copytree(BASE,package)
+        with patch.object(b,'PACKAGE',package):
+            b.apply(self.plan(),True)
+        index=self.v/'规范与工具/工具/工具索引.md'
+        # Two ordinary packages share conventional filenames and use relative
+        # resources; these are not ambiguous knowledge pages.
+        for name in ['alpha','beta']:
+            skill=self.v/'规范与工具/工具/Skill'/name
+            (skill/'scripts').mkdir(parents=True); (skill/'references').mkdir()
+            (skill/'SKILL.md').write_text('# Local tool\n[Usage](references/usage.md)\n')
+            (skill/'references/usage.md').write_text('# Usage\nRun scripts/read.py\n')
+            (skill/'scripts/read.py').write_text(
+                'from pathlib import Path\n'
+                'print((Path(__file__).resolve().parents[1]/"references/usage.md").read_text())\n')
+            with index.open('a') as f: f.write(f'\n- [{name}](Skill/{name}/SKILL.md)\n')
+        before={p.relative_to(self.v):p.read_bytes() for p in self.v.rglob('*') if p.is_file()}
+        moved=self.home/'relocated'; shutil.copytree(self.v,moved)
+        shutil.rmtree(self.v); shutil.rmtree(package)
+        self.assertEqual({p.relative_to(moved):p.read_bytes() for p in moved.rglob('*') if p.is_file()},before)
+        tool=moved/'规范与工具/工具/治理检查.py'
+        result=subprocess.run([sys.executable,str(tool)],cwd=self.home,capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+        report=json.loads(result.stdout)
+        self.assertTrue(any(x['from']=='AGENTS.md' and x['target']=='规范与工具/工具/工具索引.md'
+                            for x in report['resolved_links']))
+        for name in ['alpha','beta']:
+            result=subprocess.run([sys.executable,str(moved/f'规范与工具/工具/Skill/{name}/scripts/read.py')],
+                                  cwd=self.home,capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            self.assertIn('# Usage',result.stdout)
+        (moved/'规范与工具/工具/Skill/alpha/SKILL.md').unlink()
+        result=subprocess.run([sys.executable,str(tool)],capture_output=True,text=True)
+        self.assertEqual(result.returncode,2,result.stdout+result.stderr)
+        self.assertIn('Skill/alpha/SKILL.md',result.stdout)
+    def test_upgrade_preserves_user_tool_index_and_skill_packages(self):
+        b.apply(self.plan(),True)
+        index=self.v/'规范与工具/工具/工具索引.md'
+        skill=self.v/'规范与工具/工具/Skill/user-tool'; skill.mkdir(parents=True)
+        (skill/'SKILL.md').write_text('# User-maintained skill\n')
+        (skill/'data.bin').write_bytes(b'user-owned resource')
+        index.write_text('# User tools\n[User tool](Skill/user-tool/SKILL.md)\n')
+        before={p:p.read_bytes() for p in [index,*skill.iterdir()]}
+        # A later initializer revision must not reset the user-maintained list.
+        from unittest.mock import patch
+        with patch.object(b,'VERSION','1.2.1-test'):
+            p=self.plan(name='upgrade'); b.apply(p,True)
+        for path,data in before.items(): self.assertEqual(path.read_bytes(),data)
+        self.assertEqual(self.run_tool('治理检查.py').returncode,0)
+    def test_existing_tool_index_collision_is_not_overwritten(self):
+        (self.v/'Notes').mkdir()
+        index=self.v/'规范与工具/工具/工具索引.md'; index.parent.mkdir(parents=True)
+        index.write_text('# Existing tools\n')
+        p=self.plan('existing',{'knowledge_roots':['Notes']})
+        self.assertIn('规范与工具/工具/工具索引.md',json.loads(p.read_text())['conflicts'])
+        with self.assertRaises(ValueError): b.apply(p,True)
+        self.assertEqual(index.read_text(),'# Existing tools\n')
+        self.assertFalse((self.v/'AGENTS.md').exists())
     def test_new_repeat_preserves_index(self):
         b.apply(self.plan(),True)
         (self.v/'索引/知识全量索引.md').write_text('# user index\n')

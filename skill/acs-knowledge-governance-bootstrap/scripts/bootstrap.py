@@ -11,7 +11,7 @@ import tempfile
 PACKAGE = Path(__file__).resolve().parents[1]
 START = '<!-- acs-governance:start -->'
 END = '<!-- acs-governance:end -->'
-VERSION = '1.1.2'
+VERSION = '1.2.0'
 
 
 def digest(data):
@@ -120,9 +120,24 @@ def render(root, mode, c):
 - 普通写入后检查变更页的来源、链接和索引；结构迁移或工具变化再全量检查。自动检查不能代替语义审查。
 '''
     files[rules+'/知识维护规范.md'] = (PACKAGE/'references/knowledge-model.md').read_text()
+    files[rules+'/工具与Skill管理规范.md'] = (PACKAGE/'references/tool-portability.md').read_text()
     files[tools+'/链接检查.py'] = (PACKAGE/'scripts/health_check.py').read_text()
     files[tools+'/治理检查.py'] = (PACKAGE/'scripts/check_governance.py').read_text()
     files[tools+'/治理配置.json'] = json.dumps(c, ensure_ascii=False, indent=2)+'\n'
+    files[tools+'/工具索引.md'] = '''# 工具索引
+
+这是本库工具的接手入口，按实际使用维护；自有Skill有实际包时再登记，不预建空包。
+
+| 工具 | 用途与入口 | 版本或来源 | 依赖与接入 |
+| --- | --- | --- | --- |
+| 治理检查 | [检查脚本](治理检查.py)、[运行说明](安装与使用.md) | 版本见安装说明；内部调用链接检查.py | Python 3.10+标准库，从本库直接运行 |
+
+启用的可选工具见安装说明和治理配置。新增自有Skill时登记实际包的SKILL.md链接、用途、版本或来源、运行依赖、Agent引用位置；正式包默认放在本目录的 `Skill/<skill-name>/`。已有等价目录沿用，登记真实路径。
+
+包内脚本、参考、模板和资源随正式包保存。Agent入口指向库内包或使用有版本记录的同步副本；[保存、更新与换Agent接手规则](../规范/工具与Skill管理规范.md)。
+'''
+    if 'source-hashes' in c['modules']:
+        files[tools+'/工具索引.md'] += '\n- [原件校验](原件校验.py)：核对原始材料完整性；Python 3.10+标准库，首次使用按安装说明建立基线。\n'
     files[g+'/模板/知识页.md'] = '''---
 title: 待填写
 type: concept
@@ -152,6 +167,8 @@ tags: []
 
 - 工作区为本AGENTS.md所在知识库，所有路径相对库根，不套用开发者路径或账号。
 - 先读 `{rules}/结构约定.md` 及目标相关规范；现有明确规则与当前用户指令优先，冲突先核实。
+- 规范、模板、独立工具和自有Skill的正式内容沉淀在本库；遵循[工具与Skill管理规范]({rules}/工具与Skill管理规范.md)，从[工具索引]({tools}/工具索引.md)按任务查找。Agent安装入口指向库内正式包或使用有版本记录的同步副本，不各自维护。
+- 换Agent先读取本入口和相关规范、工具说明，检查依赖与权限后验证接手；只适配入口和运行环境，不重做已有内容。不自动发现AGENTS或Skill时显式引用库内入口。
 - 主要维护者：{c['maintainer']}。其他执行者默认读取分析，只有用户当次授权可写；任务结束授权失效。
 - 查询与讨论不授权写入；完整方案获批后端到端落盘和复校，不逐步骤重复确认。
 - 原件不可覆盖，证据不足标待核；先读源查重再更新或建立真实关联，不堆聊天流水。
@@ -177,6 +194,8 @@ tags: []
 安装版本：{VERSION}。此目录工具只依赖Python 3标准库，不依赖原Skill目录或网络。
 
 日常从库根AGENTS.md进入；需要的规范放在 `{rules}`。已有用户规则须人工核对，不把结构检查当语义验收。
+
+工具与自有Skill从[工具索引](工具索引.md)查找；正式内容属于本库，接手方式见[工具与Skill管理规范](../规范/工具与Skill管理规范.md)。库内包随知识库保留，运行环境、凭据及Agent发现入口按目标环境适配；不承诺无需配置即可运行。
 
 运行 `python3 "{tools}/治理检查.py"` 检查本地链接与已配置索引。退出0只说明检查范围内通过；不检查外链、标题锚点或事实真实性。原件目录不作为知识页统计。
 
@@ -216,7 +235,9 @@ def plan(root, mode, custom, output):
         if rel == c['governance_dir']+'/规范/结构约定.md' and rel in c['existing_rules']:
             continue
         # Existing indexes and home pages are user-maintained after initialization.
-        if receipt and rel in {c['full_index'],'目录.md'}: continue
+        if receipt and (rel in {c['full_index'],'目录.md'} or
+                        (rel == c['governance_dir']+'/工具/工具索引.md' and before is not None)):
+            continue
         if before == after: kind='unchanged'
         elif before is None: kind='create'
         elif rel=='AGENTS.md':
