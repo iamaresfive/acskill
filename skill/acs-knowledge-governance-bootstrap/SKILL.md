@@ -7,7 +7,7 @@ metadata:
 
 # 知识库治理初始化与适配
 
-本Skill独立负责治理初始化与适配，与长期管理器 `acs-second-brain-manager` 分开：落地后的规则与工具独立属于目标库，不依赖本Skill常驻。
+本Skill负责治理初始化与适配：落地后的规则与工具独立属于目标库，日常直接按库内AGENTS.md和相关规范执行，不依赖本Skill常驻。
 
 核心原则：Agent可替换，知识、规范和可复用方法留在库内。按[工具与Skill管理规范](references/tool-portability.md)设计正式包位置、工具索引与接手入口；自有Skill保存完整依赖资源，Agent目录只作引用或有版本记录的安装副本。换Agent只适配入口、运行依赖与权限，不重新制作已有成果。
 
@@ -69,4 +69,4 @@ python3 scripts/bootstrap.py apply /absolute/temp/plan/plan.json --approved
 - `scripts/bootstrap.py`：库外方案、指纹预检及安装。
 - `scripts/scan_knowledge_base.py`：只读结构观察。
 - `scripts/health_check.py`、`scripts/check_governance.py`、`scripts/source_integrity.py`：安装时复制到目标库的独立工具。
-- 只需Python 3.10+标准库，不依赖长期管理器或旧YAML配置。
+- 只需Python 3.10+标准库，安装后的治理工具可独立运行。

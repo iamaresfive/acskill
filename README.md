@@ -2,18 +2,17 @@
 
 这是我持续维护的 AI 工具库。每个工具叫一个 **Skill**，可以理解成给 AI 用的工作说明书。
 
-目前有四个工具，按你要做的事选择即可：
+目前有三个工具，按你要做的事选择即可：
 
 | 你想做什么 | 工具 | 说明入口 |
 | --- | --- | --- |
 | 给知识库建立目录和管理规则 | 知识库初始化 · `acs-knowledge-governance-bootstrap` | [查看说明](skill/acs-knowledge-governance-bootstrap/README.md) |
-| 日常查资料、入库、更新项目情况 | 第二大脑管理器 · `acs-second-brain-manager` | [查看说明](skill/acs-second-brain-manager/README.md) |
 | 把本地音视频整理成文字 | 音视频文字提取 · `acs-video-script-extractor` | [查看说明](skill/acs-video-script-extractor/README.md) |
 | 用本人授权声音给文案配音 | 本人声音克隆配音 · `acs-voice-clone` | [查看说明](skill/acs-voice-clone/README.md) |
 
-**两个知识库工具可以独立使用，不用都装。** 初始化工具把规则和检查工具放进知识库，并设计自有Skill的完整保存、索引与接手方式；以后换Agent可复用已有内容，按需适配入口、依赖与权限。管理器用于持续查询、入库和更新。已有规则会优先沿用。
+**知识库初始化后，日常按库内规则工作。** 初始化工具把规则和检查工具放进知识库，并设计自有Skill的完整保存、索引与接手方式。以后查资料、入库和更新项目情况，让AI读取库内AGENTS.md即可；换Agent可复用已有内容，按需适配入口、依赖与权限。已有规则会优先沿用。
 
-第一次使用，先看 **[新手入门](docs/新手入门.md)**，里面有四个工具各自的使用方法和可复制提示词。
+第一次使用，先看 **[新手入门](docs/新手入门.md)**，里面有三个工具各自的使用方法和可复制提示词。
 
 ## 怎么开始
 
@@ -28,7 +27,7 @@
 
 AI 工具需要支持加载 Skill、访问本地文件和执行相应命令。音视频转写还需要本地模型和依赖，先让 AI 检查环境。
 
-## 四个工具分别做什么
+## 三个工具分别做什么
 
 ### 1. 知识库初始化
 
@@ -38,15 +37,7 @@ AI 工具需要支持加载 Skill、访问本地文件和执行相应命令。�
 
 [详细说明](skill/acs-knowledge-governance-bootstrap/README.md) · [快速开始](skill/acs-knowledge-governance-bootstrap/docs/quick-start.md)
 
-### 2. 第二大脑管理器
-
-适合长期维护本地 Markdown / Obsidian 知识库：查以前的资料、整理新材料、更新项目状态、核对冲突和检查断链。保留原始来源，让当前结论能查到依据。
-
-第一次接管已有库先只读了解结构。已在使用管理器的人可以继续使用，无需为了初始化再安装另一个工具。
-
-[详细说明](skill/acs-second-brain-manager/README.md) · [快速开始](skill/acs-second-brain-manager/docs/quick-start.md) · [专项记忆使用说明](skill/acs-second-brain-manager/docs/project-memory-guide.md)
-
-### 3. 音视频文字提取
+### 2. 音视频文字提取
 
 适合本地课程、访谈、会议和短视频文件。用两个本地模型转写并比较差异，有可见字幕时结合画面复核，输出校对逐字稿、还原整理稿和待确认疑点。
 
@@ -54,7 +45,7 @@ AI 工具需要支持加载 Skill、访问本地文件和执行相应命令。�
 
 [详细说明](skill/acs-video-script-extractor/README.md) · [快速开始](skill/acs-video-script-extractor/docs/quick-start.md)
 
-### 4. 本人声音克隆配音
+### 3. 本人声音克隆配音
 
 在 Apple Silicon Mac 上，用本人明确授权的声音把文案合成为中文旁白。支持分段生成、断点复用、单段重做，以及本地 Whisper 文字核对。
 
@@ -64,7 +55,7 @@ AI 工具需要支持加载 Skill、访问本地文件和执行相应命令。�
 
 ## 仓库目录
 
-下面只展示主要入口，四个工具使用同一层级：
+下面只展示主要入口，三个工具使用同一层级：
 
 ```text
 acskill/
@@ -73,7 +64,6 @@ acskill/
 │   └── 新手入门.md                         # 怎么选、怎么开始
 └── skill/
     ├── acs-knowledge-governance-bootstrap/   # 知识库初始化
-    ├── acs-second-brain-manager/             # 第二大脑管理器
     ├── acs-video-script-extractor/           # 音视频文字提取
     └── acs-voice-clone/                      # 本人声音克隆配音
 ```

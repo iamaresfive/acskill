@@ -17,7 +17,7 @@
 
 运行环境、模型和平台内置功能沿用正常安装位置，凭据留在安全存储中。已有Agent目录先盘点、比较和提出方案，不自动搬迁或删除。第三方Skill按来源与许可处理，不把所有已装插件整包复制入库。
 
-安装名为 `acs-knowledge-governance-bootstrap`。原长期管理器仍独立保留：[acs-second-brain-manager](../acs-second-brain-manager/README.md)。
+安装名为 `acs-knowledge-governance-bootstrap`。
 
 | 场景 | 行为 |
 | --- | --- |
@@ -67,4 +67,4 @@ v1.2.0新增库内工具与Skill管理规范、可持续维护的工具索引，
 - [验收范围](references/health-check.md)
 - [专项记忆说明](docs/project-memory-guide.md)
 
-已有管理器用户：不自动删除 `.second-brain/` 或重写旧规则。需要安装治理时先提供适配方案；继续长期管理可使用原管理器。
+已有治理配置的知识库：先读取并适配现有规则，不自动删除旧配置或重写用户规则。
