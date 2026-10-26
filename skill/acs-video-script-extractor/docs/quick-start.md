@@ -1,6 +1,6 @@
 # Quick Start
 
-这是 `acs-video-script-extractor` 的最短启动路径。
+这是 `acs-video-script-extractor` 的最短启动路径：自动转写＋AI／人工复核。下面的命令可交给 AI 执行，不需要自己逐条敲。
 
 ## 1. 准备环境
 
@@ -19,6 +19,17 @@ python -c "import faster_whisper; print('ok')"
 ```
 
 默认还需要本地已经缓存 `large-v3` 与 `medium` 两个模型。Skill 运行时不会自动下载。
+
+还没有环境或模型时，把这段交给 AI，先做准备：
+
+```text
+请先检查本机Python、faster-whisper、FFmpeg／ffprobe和两种模型的实际位置。
+缺少时按faster-whisper官方说明列出依赖与兼容模型来源，先说明下载和存储需求，在我授权范围内准备。
+确认large-v3和medium都能离线读取；模型应是faster-whisper兼容格式，不能只看见同名文件夹就认定可用。
+准备完成后，先用一小段无隐私音频验证，再处理完整文件；不要覆盖原音视频。
+```
+
+模型缓存位置随环境而异，让 AI 回报实际路径；使用同一 Python 环境检查和运行。来源见 [faster-whisper 官方项目](https://github.com/SYSTRAN/faster-whisper)。
 
 如果 `faster-whisper` 在另一个 Python 环境：
 
