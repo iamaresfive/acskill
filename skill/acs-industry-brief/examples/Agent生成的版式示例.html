@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent生成的版式示例</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #f5f7fa; color: #1f2937; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; line-height: 1.65; padding: 16px; }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  .header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); border-radius: 18px; padding: 22px 24px; color: #fff; box-shadow: 0 6px 18px rgba(15,23,42,.18); }
+  .header h1 { font-size: 25px; font-weight: 800; letter-spacing: .5px; }
+  .header .meta { margin-top: 10px; font-size: 12.5px; color: #c7d2fe; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .header .meta span b { color: #fff; font-weight: 600; }
+  .chips { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 999px; padding: 3px 11px; font-size: 12px; color: #e0e7ff; }
+  .focus { margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,.35); font-size: 13.5px; color: #e8eefc; line-height: 1.7; }
+  .focus b { color: #fcd34d; }
+  .section { margin-top: 22px; }
+  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .sec-bar { width: 5px; height: 22px; border-radius: 3px; }
+  .sec-head h2 { font-size: 18px; font-weight: 800; }
+  .pill { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 10px; color: #fff; }
+  .card { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(31,41,55,.06); border-left: 5px solid #ccc; }
+  .card h3 { font-size: 15.5px; font-weight: 700; color: #111827; margin-bottom: 7px; line-height: 1.45; }
+  .tags { font-size: 11.5px; color: #6b7280; margin-bottom: 8px; }
+  .tags .date { color: #374151; font-weight: 600; }
+  .fact { font-size: 14px; color: #374151; margin-bottom: 9px; }
+  .verdict { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 8px 11px; font-size: 13.5px; color: #1f2937; }
+  .verdict b { color: #b91c1c; }
+  .note { font-size: 11.5px; color: #9ca3af; margin-top: 7px; font-style: italic; }
+  .c-blue .sec-bar, .c-blue .pill { background: #1d4ed8; }
+  .c-blue .card { border-left-color: #1d4ed8; }
+  .c-blue .verdict { background: #eff4ff; border-color: #c7d7ff; }
+  .c-blue .verdict b { color: #1d4ed8; }
+  .c-amber .sec-bar, .c-amber .pill { background: #b45309; }
+  .c-amber .card { border-left-color: #b45309; }
+  .c-amber .verdict { background: #fff7ec; border-color: #fcd9a8; }
+  .c-amber .verdict b { color: #b45309; }
+  .c-red .sec-bar, .c-red .pill { background: #b91c1c; }
+  .c-red .card { border-left-color: #b91c1c; }
+  .c-red .verdict { background: #fef2f2; border-color: #fbcaca; }
+  .c-red .verdict b { color: #b91c1c; }
+  .footer { margin-top: 26px; padding-top: 14px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 11.5px; color: #9ca3af; line-height: 1.7; }
+</style>
+</head>
+<body>
+<aside aria-label="示例说明" style="max-width:880px;margin:16px auto;padding:12px 16px;box-sizing:border-box;border:1px solid #d6dce5;border-radius:12px;background:#fff;color:#536176;font:14px/1.6 system-ui,sans-serif"><strong>Agent生成的版式示例</strong><br>以下为2026年11月3日已有成品的展示副本，用于查看版式。原生成过程未完成逐条原文核验，内容中的消息与研判不作为事实依据，也不代表本Skill的采编或效果验收。</aside>
+<div class="wrap">
+
+  <div class="header">
+    <h1>公考培训行业动态简报</h1>
+    <div class="meta">
+      <span>日期：<b>2026-11-03（周二）</b></span>
+      <span>覆盖：<b>监管政策 / 市场与同业 / 网络舆情</b></span>
+      <span>条数：<b>8 条</b></span>
+    </div>
+    <div class="chips">
+      <span class="chip">国考缴费确认至 11/6</span>
+      <span class="chip">五省报名窗口同开</span>
+      <span class="chip">12/6 多地同日笔试</span>
+    </div>
+    <div class="focus">
+      <b>今日焦点：</b>天津 8:30、江苏 9:00 同日开报，加上 11 月 2 日起报名的广东、11 月 1 日起报名的上海、10 月 29 日起报名的四川，五省窗口同时打开。更值得记的是报名数据的披露方式：广东在报名前两天每日 12:00、18:00 公布各职位具体人数；天津在 11 月 5 日后把公布频次提到每日三次；江苏全程只给蓝、黄、红三色区间，具体人数要等到 11 月 13 日补报名结束。同一件事有三种公开方式，数据类内容在不同省份的可操作空间并不一样。另需注意口径：国家公务员局公布的 2027 国考过审人数为 345 万，部分财经报道使用的 302.5 万未见官方对应，两者不可混用。
+    </div>
+  </div>
+
+  <div class="section c-blue">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <h2>一、监管与政策</h2>
+      <span class="pill">3 条</span>
+    </div>
+
+    <div class="card">
+      <h3>2027 国考报名确认缴费 11 月 6 日截止，345 万人过审、平均报录比约 97:1</h3>
+      <div class="tags"><span class="date">2026-11-01</span> ｜ 来源：国家公务员局、央视新闻</div>
+      <div class="fact">国家公务员局 11 月 1 日启动 2027 年度国考网上报名确认及缴费，时间为<b>11 月 1 日 0:00 至 11 月 6 日 24:00</b>；截至 10 月 26 日 18:00，<b>345 万人通过资格审查</b>，计划招录 3.57 万人，平均报录比约 <b>97:1</b>。未按期完成确认并缴费的，<b>视为自动放弃报考资格</b>，无法打印准考证和参加考试。</div>
+      <div class="verdict"><b>研判：</b>这条的落点是“确认”而不是“报名”。过审人数只说明资格审核结果，缴费确认才决定实际考场规模；对行业而言，345 万是报名阶段的官方口径，后续确认人数、实际参考人数还会继续下降，三者不是同一个数。把 345 万直接当成“考生规模”，会高估当期需求。</div>
+      <div class="note">过审人数截至 10 月 26 日 18:00；另有财经报道使用 302.5 万口径，未见国家公务员局对应表述，本简报不采用；报录比 = 过审人数 ÷ 计划招录人数。</div>
+    </div>
+
+    <div class="card">
+      <h3>江苏 2027 省考今日 9:00 开报：8149 人，报名期只给色块、不给具体人数</h3>
+      <div class="tags"><span class="date">2026-10-30</span> ｜ 来源：江苏省公务员局公告</div>
+      <div class="fact">江苏省 2027 年度考试录用公务员计划招录 <b>8149 人</b>，报名 <b>11 月 3 日 9:00 至 11 月 9 日 16:00</b>，资格初审至 11 月 11 日 16:00，缴费至 11 月 12 日 16:00，补报名 <b>11 月 13 日 9:00—16:00</b>；公共科目笔试 12 月 6 日，公安专业科目 12 月 5 日下午。报名系统以颜色标示报考比例：<b>蓝色低于 3:1、黄色 3:1 至 50:1、红色高于 50:1</b>，各职位具体报名成功人数要到 <b>11 月 13 日 16:00 补报名结束后统一公布</b>。</div>
+      <div class="verdict"><b>研判：</b>江苏把“可比较的精确数据”推迟到报名结束之后，报名期间只提供方向性提示。对数据类内容而言，这意味着以实时竞争比为核心的产品在江苏没有官方数据源；对考生行为而言，色块会把注意力集中到“红色职位”，而不是精确的分母。</div>
+      <div class="note">8149 人为计划招录数，非最终录用数；报考比例 = 报名成功人数 ÷ 招录人数，与国考“过审人数 ÷ 招录人数”口径不同，不可直接比较；色块规则以各设区市报名系统实际显示为准。</div>
+    </div>
+
+    <div class="card">
+      <h3>天津 2027 市考今日 8:30 开报：1515 人，公共卷分三类、笔试跨两天</h3>
+      <div class="tags"><span class="date">2026-11-02</span> ｜ 来源：天津市公务员局公告</div>
+      <div class="fact">天津 2027 年度计划招录 <b>1515 人</b>，报名 <b>11 月 3 日 8:30 至 11 月 9 日 18:00</b>，资格审查至 11 月 10 日 18:00，缴费至 11 月 11 日 16:00；<b>笔试为 12 月 5 日、6 日两天</b>，5 日下午考专业科目，6 日考行测、申论。公共科目试卷分<b>综合市区、综合街镇、行政执法三类</b>；公安、审计、统计职位另加专业科目。另设<b>放弃报考退费窗口</b>：11 月 10 日 8:30 至 11 月 11 日 16:00 可填报退费信息。</div>
+      <div class="verdict"><b>研判：</b>就本期检索到的省份看，天津有三处值得单独记。其一，专业科目集中在 12 月 5 日下午，公安、审计、统计三类职位都要加考，相关备考周期比公共科目考生少一天；其二，公共卷分综合市区、综合街镇、行政执法三类，与江苏的 A/B/C 属同一方向，分级分类已在多个省份出现；其三，放弃报考退费窗口把“报名”定义为可撤回动作，而不只是一次性承诺。</div>
+      <div class="note">1515 人为计划招录数；此“退费”指考务费退还，与培训机构退费无关；三类卷具体适用范围以职位表和政策指南为准。</div>
+    </div>
+  </div>
+
+  <div class="section c-amber">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <h2>二、市场与同业</h2>
+      <span class="pill">4 条</span>
+    </div>
+
+    <div class="card">
+      <h3>A 股教育板块三季报：15 家合计营收 187.75 亿元，8 家增长、10 家盈利</h3>
+      <div class="tags"><span class="date">2026-11-03</span> ｜ 来源：上海证券报、证券时报</div>
+      <div class="fact">A 股教育行业上市公司 2026 年三季报已全部披露，15 家公司前三季度合计营业收入约 <b>187.75 亿元</b>，其中 <b>8 家营收同比增长、10 家实现盈利</b>。华图山鼎前三季度营收 <b>21.71 亿元、同比 -11.91%</b>，其中非学历培训业务 <b>21.52 亿元</b>。</div>
+      <div class="verdict"><b>研判：</b>21.52 亿占 21.71 亿的 99.1%，原“设计”业务已基本归零，这与华图 10 月 15 日公告拟更名“华图科技”的方向一致：更名不是品牌包装，而是对单一业务依赖的确认。更值得看的是分布——15 家中 10 家盈利、8 家增长，传智、昂立、学大等以 IT 培训、职业教育或多元业务实现增长；承压更明显的是华图山鼎、中公教育这类以公考为主业的公司。更准确的表述是“公考单一主业承压”，而不是“行业衰退”。</div>
+      <div class="note">合计口径为媒体统计，未逐家核对；99.1% 为本简报据三季报数据测算，公司未直接披露该比例；“15 家”为上海证券报统计样本，非全部教育类上市公司。</div>
+    </div>
+
+    <div class="card">
+      <h3>华图山鼎三季度单季转亏 1.49 亿元，营收同比下降 15.2%</h3>
+      <div class="tags"><span class="date">2026-11-01</span> ｜ 来源：华图山鼎 2026 年三季报（经媒体汇总）</div>
+      <div class="fact">华图山鼎 2026 年第三季度营业收入 <b>6.28 亿元、同比下降 15.2%</b>；归属于上市公司股东的净利润为 <b>-1.49 亿元</b>，上年同期为盈利 3621 万元。前三季度营收 <b>21.71 亿元、同比 -11.91%</b>；公司披露，前三季度利润受终止股权激励的一次性股份支付费用 <b>1.23 亿元</b>影响。</div>
+      <div class="verdict"><b>研判：</b>单季亏损与前三季度累计盈利并存，且利润受 <b>1.23 亿元</b>一次性股份支付费用影响，不能直接把单季亏损当成经营恶化的证据。剔除一次性因素后，营收同比下降 15.2% 仍是更值得跟踪的变量。</div>
+      <div class="note">数据来自三季报及媒体汇总，未逐页核对原文；1.23 亿元为终止股权激励的一次性股份支付费用，属公司披露口径；单季与前三季度口径不同，不可混算。</div>
+    </div>
+
+    <div class="card">
+      <h3>粉笔上半年毛利率从 54.0% 降至 41.8%，员工从 7005 人减至 5963 人</h3>
+      <div class="tags"><span class="date">2026-11-02</span> ｜ 来源：粉笔 2026 年半年报（经媒体汇总）</div>
+      <div class="fact">粉笔 2026 年上半年毛利率由上年同期的 <b>54.0% 降至 41.8%</b>，下降 12.2 个百分点；员工总数由 <b>7005 人减至 5963 人</b>，减少 1042 人；培训服务收入同比下降约 <b>17.5%</b>，总收入约 12.48 亿元、同比下降约 16.3%。</div>
+      <div class="verdict"><b>研判：</b>毛利率下降 12 个百分点和员工减少 1042 人同时出现，说明减员是被动应对而非“以价换量”：如果是主动扩张，收入应上升而不是下降 17.5%。与华图单季转亏、前三季度仍盈利的情况不同，粉笔承压的位置在毛利率本身，指向定价权或成本结构。两家承压的位置不同，行业里“降本”与“提价”的可行性并不相同。</div>
+      <div class="note">数据为 2026 年上半年口径，经媒体汇总，未核港交所原文；毛利率降幅为两期数据相减所得；员工数为期末人数，非平均人数。</div>
+    </div>
+
+    <div class="card">
+      <h3>中公教育前三季度营收 15.57 亿元、净利约 5007 万元，三季度单季转亏</h3>
+      <div class="tags"><span class="date">2026-11-02</span> ｜ 来源：中公教育 2026 年三季报（经媒体汇总）</div>
+      <div class="fact">中公教育 2026 年前三季度营业收入 <b>15.57 亿元</b>，归属于上市公司股东的净利润约 <b>5007 万元</b>；第三季度单季转亏。截至 9 月末，资产负债率约 <b>86%</b>。</div>
+      <div class="verdict"><b>研判：</b>前三季度仍盈利、单季转亏，说明利润主要靠前两季度积累，第三季度的经营压力已经显现。86% 的资产负债率意味着继续靠负债腾挪的空间有限。中公同时呈现经营转弱与高负债率两个信号，单看利润表会低估风险。</div>
+      <div class="note">数据来自三季报及媒体汇总，未逐页核对原文；归母净利润与扣非净利润口径不同；资产负债率为期末时点数据。</div>
+    </div>
+  </div>
+
+  <div class="section c-red">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <h2>三、网络舆情</h2>
+      <span class="pill">1 条</span>
+    </div>
+
+    <div class="card">
+      <h3>中公教育及法定代表人李永新新增限制消费令，案由为房屋租赁合同纠纷</h3>
+      <div class="tags"><span class="date">2026-11-02</span> ｜ 来源：企业信息公示平台、法院公开执行信息</div>
+      <div class="fact">中公教育科技股份有限公司及法定代表人李永新新增一则限制消费令，执行法院为杭州经济技术开发区人民法院，案号 <b>（2026）浙0114执3742号</b>，<b>案由为房屋租赁合同纠纷</b>，申请执行人为杭州恒旺农业开发有限公司。法院于 2026 年 7 月 23 日立案、10 月 20 日发布限消令；该公司在此案中此前已被执行约 <b>653 万元</b>。公司投资者热线回应称，该事项不影响经营，目前运营正常。</div>
+      <div class="verdict"><b>研判：</b>关键在案由，不在“又被限高”。退费类欠款可以协商、分期、以课抵扣；房屋租赁属经营性支出中最刚性的一项，金额不大但几乎没有协商空间。欠款从退费扩散到房租，意味着资金压力已经触及维持营业场所这一层。主体也需分清：本次是上市公司本体及其法定代表人，不是分支机构或股东层面。</div>
+      <div class="note">限制消费令是执行措施，不是行政处罚，也不等同于失信被执行人；本条为公开信息平台记录，未核裁判文书原文；公司回应为单方陈述。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    本简报基于公开信息整理，不构成投资或经营建议。<br>
+    数据口径以原文为准；标注“未经证实”者请自行核实。 · 2026-11-03
+  </div>
+
+</div>
+</body>
+</html>
