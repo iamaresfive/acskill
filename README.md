@@ -64,7 +64,7 @@ AI 工具需要支持加载或明确读取 Skill、访问本地文件和执行�
 | 审核修改 | [acs-content-review](skill/acs-content-review/README.md) | 核对事实、主线与逻辑，保留作者表达 |
 | 定稿后制作 | [acs-wechat-publish-pack](skill/acs-wechat-publish-pack/README.md) | 制作可复制图文、封面和手机预览，运行包内检查 |
 
-[完整流程与具体案例](docs/公众号创作流程与Skill.md)包含提出观察、核对材料、起草和复盘，以及[飞书方法文档](https://qs4978dogu.feishu.cn/docx/QKNbdUiAWoPEp0xHZgKcv0VBnCc)的对应入口。这是现行工具的分工说明，不把后来沉淀的Skill说成历史文章当时全部调用过。
+[完整流程与具体案例](docs/公众号创作流程与Skill.md)包含日常积累素材、提出观察、核对材料、起草和复盘，以及[飞书方法文档](https://qs4978dogu.feishu.cn/docx/QKNbdUiAWoPEp0xHZgKcv0VBnCc)的对应入口。这是现行工具的分工说明，不把后来沉淀的Skill说成历史文章当时全部调用过。
 
 ## 仓库目录
 
