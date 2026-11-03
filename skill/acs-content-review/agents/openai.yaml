@@ -1,0 +1,4 @@
+interface:
+  display_name: "个人文章与口播稿审核"
+  short_description: "审核个人文章与口播稿的事实、逻辑和表达，保留作者立场与锋芒，不审成分析报告"
+  default_prompt: "使用 $acs-content-review 审核这篇文章或口播稿，保留我的主观判断和棱角，只指出真正影响事实、逻辑与表达的问题。"

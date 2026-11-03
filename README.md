@@ -2,17 +2,20 @@
 
 这是我持续维护的 AI 工具库。每个工具叫一个 **Skill**，可以理解成给 AI 用的工作说明书。
 
-目前有三个工具，按你要做的事选择即可：
+目前有六个工具，按你要做的事选择即可：
 
 | 你想做什么 | 工具 | 说明入口 |
 | --- | --- | --- |
 | 给知识库建立目录和管理规则 | 知识库初始化 · `acs-knowledge-governance-bootstrap` | [查看说明](skill/acs-knowledge-governance-bootstrap/README.md) |
 | 把本地音视频整理成文字 | 音视频文字提取 · `acs-video-script-extractor` | [查看说明](skill/acs-video-script-extractor/README.md) |
 | 用本人授权声音给文案配音 | 本人声音克隆配音 · `acs-voice-clone` | [查看说明](skill/acs-voice-clone/README.md) |
+| 判断选题、开头与读者的关系 | 内容吸引力审核 · `acs-content-appeal-review` | [查看说明](skill/acs-content-appeal-review/README.md) |
+| 审核文章或口播稿 | 个人文章与口播稿审核 · `acs-content-review` | [查看说明](skill/acs-content-review/README.md) |
+| 把定稿做成公众号发布包 | 公众号定稿发布包 · `acs-wechat-publish-pack` | [查看说明](skill/acs-wechat-publish-pack/README.md) |
 
 **知识库初始化后，日常按库内规则工作。** 初始化工具把规则和检查工具放进知识库，并设计自有Skill的完整保存、索引与接手方式。以后查资料、入库和更新项目情况，让AI读取库内AGENTS.md即可；换Agent可复用已有内容，按需适配入口、依赖与权限。已有规则会优先沿用。
 
-第一次使用，先看 **[新手入门](docs/新手入门.md)**，里面有三个工具各自的使用方法和可复制提示词。
+第一次使用，先看 **[新手入门](docs/新手入门.md)**，里面有各个工具的使用方法和可复制提示词。
 
 ## 怎么开始
 
@@ -27,7 +30,7 @@
 
 AI 工具需要支持加载或明确读取 Skill、访问本地文件和执行相应命令。[新手入门](docs/新手入门.md#使用前准备)说明完整包保存、客户端引用和最小检查；安装 Skill 后，再分别检查知识库配置、转写模型或配音环境。音视频转写采用自动转写＋AI／人工复核，配音初始化复用已有本地环境。
 
-## 三个工具分别做什么
+## 工具分别做什么
 
 ### 1. 知识库初始化
 
@@ -53,9 +56,19 @@ AI 工具需要支持加载或明确读取 Skill、访问本地文件和执行�
 
 [详细说明](skill/acs-voice-clone/README.md) · [环境与初始化](skill/acs-voice-clone/references/runtime.md)
 
+### 4–6. 内容创作工具
+
+| 创作步骤 | Skill | 用途 |
+| --- | --- | --- |
+| 讨论主线、检查入口 | [acs-content-appeal-review](skill/acs-content-appeal-review/README.md) | 检查目标读者、阅读收获、继续关注与商业承接理由 |
+| 审核修改 | [acs-content-review](skill/acs-content-review/README.md) | 核对事实、主线与逻辑，保留作者表达 |
+| 定稿后制作 | [acs-wechat-publish-pack](skill/acs-wechat-publish-pack/README.md) | 制作可复制图文、封面和手机预览，运行包内检查 |
+
+[完整流程与具体案例](docs/公众号创作流程与Skill.md)包含提出观察、核对材料、起草和复盘，以及[飞书方法文档](https://qs4978dogu.feishu.cn/docx/QKNbdUiAWoPEp0xHZgKcv0VBnCc)的对应入口。这是现行工具的分工说明，不把后来沉淀的Skill说成历史文章当时全部调用过。
+
 ## 仓库目录
 
-下面只展示主要入口，三个工具使用同一层级：
+下面只展示主要入口，六个工具使用同一层级：
 
 ```text
 acskill/
@@ -65,7 +78,10 @@ acskill/
 └── skill/
     ├── acs-knowledge-governance-bootstrap/   # 知识库初始化
     ├── acs-video-script-extractor/           # 音视频文字提取
-    └── acs-voice-clone/                      # 本人声音克隆配音
+    ├── acs-voice-clone/                      # 本人声音克隆配音
+    ├── acs-content-appeal-review/            # 内容吸引力审核
+    ├── acs-content-review/                   # 个人文章与口播稿审核
+    └── acs-wechat-publish-pack/              # 公众号定稿发布包
 ```
 
 每个工具里的文件分工：
