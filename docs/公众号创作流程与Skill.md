@@ -8,10 +8,10 @@
 | --- | --- | --- |
 | 1. 日常积累素材 | 自己的笔记或知识库；需要搭建时可用[知识库初始化](../skill/acs-knowledge-governance-bootstrap/README.md) | 留下原文、来源日期、自己的想法，写作前检索已有观察与案例 |
 | 2. 提出观察 | 作者与AI讨论 | 先给真实观察、经历和初步立场，不只丢一个标题 |
-| 3. 讨论主线 | [内容吸引力审核](../skill/acs-content-appeal-review/README.md) | 找到与目标读者有关、值得继续追问的问题 |
+| 3. 讨论主线 | [内容吸引力审核](../skill/acs-content-appeal-review/README.md) | 参考同平台、同类型的内容，找到读者愿意追问的问题，检查正文有没有兑现开头的承诺 |
 | 4. 核对材料 | 按材料选择读取与搜索工具 | 区分观察、事实和推演，回到公告、原文或实际记录 |
 | 5. 组织成稿 | 作者与AI共同起草 | 安排每一部分的任务，让案例服务完整主线 |
-| 6. 审核修改 | [个人文章与口播稿审核](../skill/acs-content-review/README.md)；必要时补[吸引力审核](../skill/acs-content-appeal-review/README.md) | 核对事实和逻辑，保留作者立场，按实际问题修改 |
+| 6. 审核修改 | [个人文章与口播稿审核](../skill/acs-content-review/README.md)；必要时补[吸引力审核](../skill/acs-content-appeal-review/README.md) | 核对事实和逻辑，对照作者原意与改前改后，检查观点有没有被改偏 |
 | 7. 制作成品 | [公众号定稿发布包](../skill/acs-wechat-publish-pack/README.md) | 定稿后排版、制作封面配图、检查复制页与手机效果 |
 | 8. 复盘沉淀 | 作者回看本次过程 | 保留有用的修改、原始材料和版本，形成下次能用的规则 |
 
