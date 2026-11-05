@@ -63,3 +63,9 @@ python3 -B -m unittest discover -s tests -v
 ```
 
 测试覆盖分段、授权拒绝、目录保护、片段指纹、复用、局部重做参数、波形和文字差异等；单元测试不替代真实配音和试听。
+
+## 许可与商业授权
+
+本 Skill 中由维护者有权授权的原创说明、提示词及配套源代码采用 [CC BY-NC 4.0](https://github.com/iamaresfive/acskill/blob/main/LICENSE) 许可。作者为 [iamaresfive](https://github.com/iamaresfive)，来源为 [acskill](https://github.com/iamaresfive/acskill)。具体适用范围见[许可范围说明](https://github.com/iamaresfive/acskill/blob/main/NOTICE.md)。
+
+非商业用途可按协议使用。对外分享时请保留署名、来源和许可声明，并标明修改情况。商业授权可通过 [GitHub Issue](https://github.com/iamaresfive/acskill/issues/new) 联系维护者。

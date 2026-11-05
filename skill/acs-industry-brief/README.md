@@ -50,3 +50,9 @@ python3 scripts/brief.py check 本次成果目录/YYYY-MM-DD-公考培训行业�
 版本v1.1支持独立安装位置，保护Skill包本身及按结构识别出的知识库，拒绝覆盖已有同名成品。13项离线回归与包结构校验通过；脚本通过不能证明消息真实或研判成立，仍需联网读源与人工审定。
 
 本工具不自动外发、定时运行、发布或入库，不替代个人观点文章、单一机构经营建议或政治时政周报。
+
+## 许可与商业授权
+
+本 Skill 中由维护者有权授权的原创说明、提示词及配套源代码采用 [CC BY-NC 4.0](https://github.com/iamaresfive/acskill/blob/main/LICENSE) 许可。作者为 [iamaresfive](https://github.com/iamaresfive)，来源为 [acskill](https://github.com/iamaresfive/acskill)。具体适用范围见[许可范围说明](https://github.com/iamaresfive/acskill/blob/main/NOTICE.md)。
+
+非商业用途可按协议使用。对外分享时请保留署名、来源和许可声明，并标明修改情况。商业授权可通过 [GitHub Issue](https://github.com/iamaresfive/acskill/issues/new) 联系维护者。
