@@ -46,11 +46,18 @@ export ACS_FFPROBE="/path/to/ffprobe"
 
 ## 2. 建立独立输出目录
 
+优先使用用户指定或当前任务已约定的位置。为新的转写批次使用独立输出目录，例如 `/path/to/task/output`。下面的命令用 `/path/to/output` 代指该目录，预检和转写共用它。
+
+### 只处理指定片段
+
+只要某段时，先核对原片起止时间。以下示例截取 `00:40` 到 `01:25`，写到任务目录中的新文件。同名文件已经存在时，先另选文件名再运行。对纯音频，可用 `-vn -c:a pcm_s16le` 输出 WAV。
+
 ```bash
-mkdir -p /path/to/output
+ffmpeg -nostdin -n -ss 40 -i "/path/to/video.mp4" -t 45 \
+  -map '0:v:0?' -map 0:a:0 -c:v libx264 -c:a aac "/path/to/task/clip.mp4"
 ```
 
-不要把机器产物直接写回源视频所在文件名，也不要覆盖历史交付。
+核对片段实际起止，记录原片文件名、SHA-256 和处理区间。后续命令将视频路径替换为 `clip.mp4`，预检和来源哈希均以该副本为准。成片外的字幕轨可回原片核对。片段内的时间戳从片段起点计，交付时说明口径，或换算回原片时间。
 
 ## 3. 预检媒体
 
@@ -100,9 +107,9 @@ python scripts/extract_review_frames.py \
 
 纯音频或没有成片字幕时跳过。
 
-## 7. 生成三个最终文件
+## 7. 生成约定稿件
 
-按照 [输出格式](../references/output-format.md) 生成：
+按[输出格式](../references/output-format.md)选择模板。默认交付三份：
 
 ```text
 逐字稿-校对版.md
@@ -112,6 +119,8 @@ python scripts/extract_review_frames.py \
 
 其中“还原文案整理”只负责在不改变原意的前提下清理口头噪声和无意义重复，不等于创作性改写。
 
+只要一种稿件时，按约定交付。未要求单独疑点清单时，把未确认项留在稿件或交付说明中。
+
 ## 8. 验收
 
 ```bash
@@ -119,6 +128,12 @@ python scripts/validate_outputs.py "/path/to/output"
 ```
 
 脚本会校验不同模型、结果文件、来源哈希及差异文件结构。看到 `PASS｜完整交付有效` 后，还需确认人工校对完成、未确认项保留及完整性警告已说明，才能把任务称为完整完成。
+
+只要逐字稿时使用 `--deliverables transcript`。`clean` 代表整理稿，`issues` 代表疑点清单，允许组合。指定稿件验收同样检查双模型、来源和需要复核的长空缺。
+
+```bash
+python scripts/validate_outputs.py "/path/to/output" --deliverables transcript
+```
 
 如果只是检查机器阶段：
 

@@ -36,9 +36,30 @@ class AuditFixes(unittest.TestCase):
     def test_review_duration_bound(self):
         artifacts(self.root);p=self.root/'review-points.json';data=json.loads(p.read_text());data['duration']=600;put(p,data)
         out=run('validate_outputs.py',self.root);self.assertNotEqual(out.returncode,0);self.assertIn('时长与媒体时长不一致',out.stdout)
+    def test_requested_deliverables_keep_default_and_check_required_files(self):
+        artifacts(self.root)
+        for name in ("文案-还原整理版.md", "待确认疑点.md"):
+            (self.root / name).unlink()
+        selected = run('validate_outputs.py', self.root, '--deliverables', 'transcript')
+        self.assertEqual(selected.returncode, 0, selected.stdout + selected.stderr)
+        self.assertIn('指定交付', selected.stdout)
+        default = run('validate_outputs.py', self.root)
+        self.assertNotEqual(default.returncode, 0)
+        self.assertIn('文案-还原整理版.md', default.stdout)
+        self.assertIn('待确认疑点.md', default.stdout)
+        mixed = run('validate_outputs.py', self.root, '--deliverables', 'transcript', 'issues')
+        self.assertNotEqual(mixed.returncode, 0)
+        self.assertIn('待确认疑点.md', mixed.stdout)
+        self.assertNotIn('文案-还原整理版.md', mixed.stdout)
+        conflict = run('validate_outputs.py', self.root, '--machine-only', '--deliverables', 'transcript')
+        self.assertEqual(conflict.returncode, 2)
+
     def test_common_gap_requires_review_not_automatic_speech_claim(self):
         self.scenario([{'start':0,'end':1,'text':'开始'},{'start':599,'end':600,'text':'结束'}],600)
         p=run('validate_outputs.py',self.root);self.assertNotEqual(p.returncode,0);self.assertIn('双模型共同空缺候选',p.stdout)
+        scoped = run('validate_outputs.py', self.root, '--deliverables', 'transcript')
+        self.assertNotEqual(scoped.returncode, 0)
+        self.assertIn('未说明长空缺', scoped.stdout)
         p=run('validate_outputs.py',self.root,'--machine-only');self.assertEqual(p.returncode,0);self.assertIn('长空缺候选',p.stdout)
         hashes={m:hashlib.sha256((self.root/f'raw-{m}.json').read_bytes()).hexdigest() for m in ('large-v3','medium')}
         review={'source_sha256':SOURCE_HASH,'input_sha256':hashes,'gaps':[{'model':m,'start':1,'end':599,'status':'silence','reason':'test fixture contains silence','evidence':'reviewed synthetic interval'} for m in hashes]}

@@ -10,13 +10,22 @@ import math
 from pathlib import Path
 import re
 
-FINAL_FILES = ("逐字稿-校对版.md", "文案-还原整理版.md", "待确认疑点.md")
+FINAL_FILES = {
+    "transcript": "逐字稿-校对版.md",
+    "clean": "文案-还原整理版.md",
+    "issues": "待确认疑点.md",
+}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="校验视频文案提取工作流产物。")
     parser.add_argument("output_dir", type=Path, help="工作流输出目录")
-    parser.add_argument("--machine-only", action="store_true", help="只校验机器产物，不要求最终三个 Markdown")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--machine-only", action="store_true", help="只校验机器产物，不验收最终稿件")
+    mode.add_argument(
+        "--deliverables", nargs="+", choices=tuple(FINAL_FILES),
+        help="按约定验收指定稿件：transcript 逐字稿、clean 整理稿、issues 疑点清单。默认验收三份。",
+    )
     return parser.parse_args()
 
 
@@ -266,7 +275,8 @@ def main() -> int:
     if not errors:
         validate_coverage(output_dir,raw_data,probe_duration,source_hash,args.machine_only,errors,warnings)
     if not args.machine_only:
-        for name in FINAL_FILES:
+        for deliverable in dict.fromkeys(args.deliverables or FINAL_FILES):
+            name = FINAL_FILES[deliverable]
             path = output_dir / name
             if not path.is_file():
                 errors.append(f"缺少最终交付：{name}")
@@ -281,6 +291,8 @@ def main() -> int:
         print(f"FAIL｜{len(errors)} error，{len(warnings)} warning")
         return 1
     scope = "机器产物" if args.machine_only else "完整交付"
+    if args.deliverables:
+        scope = "指定交付"
     print(f"PASS｜{scope}有效｜{len(models)} 个模型，{len(warnings)} 个警告")
     return 0
 
