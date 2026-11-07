@@ -1,6 +1,6 @@
 interface:
-  display_name: "知识库治理初始化与适配 v1.2.0"
+  display_name: "知识库治理初始化与适配 v1.3.0"
   short_description: "把规范、工具和自有Skill管理规则沉淀到知识库，建立不同Agent接手的入口"
-  default_prompt: "使用 $acs-knowledge-governance-bootstrap 为我的知识库生成治理安装方案；已有库保留结构，规范、工具和自有Skill正式内容留在库内，设计好索引与换Agent接手入口，确认后落地。"
+  default_prompt: "使用 $acs-knowledge-governance-bootstrap 为我的知识库生成治理安装方案；已有库保留结构，规范、工具和自有Skill正式内容留在库内，设计好索引与换Agent接手入口，通过对话选择是否启用工作文件分类和交接中转站，确认方案后落地。"
 policy:
   allow_implicit_invocation: true

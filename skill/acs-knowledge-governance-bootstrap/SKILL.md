@@ -2,7 +2,7 @@
 name: acs-knowledge-governance-bootstrap
 description: 为本地Markdown或Obsidian知识库一次性初始化或适配治理体系，把规范、模板、独立工具和自有Skill管理规则沉淀到库内，支持不同Agent接手。新库使用中文目录，已有库保留原结构；仅初始化、接管配置或治理升级时使用，不接管日常查询与入库。
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # 知识库治理初始化与适配
@@ -15,12 +15,18 @@ metadata:
 
 ## 先确认需要
 
-确认用户指定根目录存在；只补问尚不清楚的主要用途、已有库/新库、主要维护者及所需模块。首次只读：运行 `scripts/scan_knowledge_base.py` 或等价检查，完整读取AGENTS及相关现有权威规则，定位既有来源、知识、索引、模板与工具。扫描是观察，不是授权或确认规则。
+确认用户指定根目录存在；通过对话只补问尚不清楚的用途、已有库/新库及所需模块。一次处理一个选择，已知信息不重复问；用户不填JSON，由Agent将确认结果转成配置。首次只读：运行 `scripts/scan_knowledge_base.py` 或等价检查，完整读取AGENTS及相关现有权威规则，定位既有来源、知识、索引、模板与工具。扫描是观察，不是授权或确认规则。
 
 同时确认本库自有Skill的正式位置及工具索引；有相关Agent安装目录时仅在可访问的授权范围内盘点，核对版本差异。没有现成Skill不创建空包；不自动搬迁既有安装、复制平台内置功能或凭据。已有等价库内位置优先复用，在接手入口注明。
 
 - **新库**：默认中文目录 `知识/`、`原始材料/`、`索引/`、`规范与工具/`；按用途命名业务目录，不复制开发者行业、机构或个人路径。AGENTS.md等固定文件名保留。空的Obsidian配置目录不算业务内容。
 - **已有库**：沿用原目录、文件名、页面字段和索引。明确映射知识和来源目录、现有权威文件与索引；不强制改中文、不批量移动。没有来源目录或索引时先说明需求，未确认不建立。已有等价工具与规范应复用或合并，不制造第二套权威。
+
+## 可选工作方式
+
+工作文件分类（work-files）与交接中转站（handoff）分别选择，默认关闭，互不依赖。先说明用途，再问是否启用。工作分类可沿用现有、采用推荐或自定义；是否按软件分目录也由用户选。选择后再读[工作文件规范](references/work-files.md)或[中转站规范](references/handoff.md)，只确认该模块缺失的位置与布局。未选择不生成相关规则、模板或空文件夹。
+
+两者使用用户确认的库外路径：工作成果不自动入库，中转不等于入库。配置只记录本机绝对路径，安装器不写库外目录、不搬旧文件、不修改Agent配置。日后实际任务按权限按需建目录，另一台机器或云端不能冒充本机路径。
 
 ## 生成可审阅方案
 
@@ -34,7 +40,7 @@ python3 scripts/bootstrap.py plan /absolute/vault --mode existing --config /abso
 
 脚本仅生成候选，不改目标库。说明每个新增、合并、保留项和可选模块，逐项审阅 `方案.md`、`plan.json`、`before/` 与 `after/` 的真实内容。AGENTS只追加/更新标记区，仍须人工判断语义冲突；它不能覆盖现有明确规则。
 
-基础包包括AGENTS入口、结构约定、知识维护规则、工具与Skill管理规范、工具索引、空白知识页模板、路径配置、链接/索引检查和本地使用说明。新库另生成中文导航；已有库不重建知识索引，已有等价工具索引与Skill位置需复用或人工合并。可选模块为网页收录、多格式读取、项目记忆、多Agent协作、原件哈希，只选择用户需要的，不为凑齐模板全部安装。
+基础包包括AGENTS入口、结构约定、知识维护规则、工具与Skill管理规范、工具索引、空白知识页模板、路径配置、链接/索引检查和本地使用说明。新库另生成中文导航；已有库不重建知识索引，已有等价工具索引与Skill位置需复用或人工合并。可选模块为网页收录、多格式读取、项目记忆、多Agent协作、原件哈希、工作文件分类和交接中转站，只选择用户需要的，不为凑齐模板全部安装。
 
 生成器提供最小起点，不代替适配判断。未知字段、目录交叠、路径越界、符号链接、已有文件冲突会拒绝。索引须为文件路径，不能占用目录或放入原始材料区。若目标已存在同名规则或自定义格式，先比较并沿用现有文件；必要的人工合并按 [冲突与升级](references/onboarding.md) 操作，不绕过冲突直接覆盖。
 
@@ -66,6 +72,8 @@ python3 scripts/bootstrap.py apply /absolute/temp/plan/plan.json --approved
 - [协作规范](references/concurrency-policy.md)（选择collaboration时读取）
 - [网页规范](references/web-ingestion.md)、[文件规范](references/file-reading.md)（按模块读取）
 - [验收范围](references/health-check.md)
+- [工作文件管理](references/work-files.md)（选择work-files时读取）
+- [交接中转站](references/handoff.md)（选择handoff时读取）
 - `scripts/bootstrap.py`：库外方案、指纹预检及安装。
 - `scripts/scan_knowledge_base.py`：只读结构观察。
 - `scripts/health_check.py`、`scripts/check_governance.py`、`scripts/source_integrity.py`：安装时复制到目标库的独立工具。

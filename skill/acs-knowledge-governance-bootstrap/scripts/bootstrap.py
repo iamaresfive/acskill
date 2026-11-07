@@ -11,7 +11,93 @@ import tempfile
 PACKAGE = Path(__file__).resolve().parents[1]
 START = '<!-- acs-governance:start -->'
 END = '<!-- acs-governance:end -->'
-VERSION = '1.2.0'
+VERSION = '1.3.0'
+WORK_CATEGORIES = ['文档报告', '表格数据', '图片设计', '音视频', '代码工具', '资料整理']
+
+
+def single_line(value, label):
+    if not isinstance(value, str) or not value.strip() or any(ord(c) < 32 for c in value):
+        raise ValueError(label + ' must be a nonempty single line')
+    return value
+
+
+def external_root(root, value):
+    single_line(value, 'external root')
+    path = Path(value)
+    if not path.is_absolute() or '..' in path.parts:
+        raise ValueError('external root must be an explicit absolute path on this host')
+    path = path.resolve()
+    if path == root.resolve() or root.resolve() in path.parents or path in root.resolve().parents:
+        raise ValueError('external root must not overlap the knowledge vault')
+    if path.exists() and not path.is_dir():
+        raise ValueError('external root is an existing file')
+    return str(path)
+
+
+def workflow_config(root, c):
+    # External paths are recorded only: the installer never writes outside the vault.
+    for module, key in [('work-files', 'work_files'), ('handoff', 'handoff')]:
+        value = c.get(key)
+        if module not in c['modules']:
+            if value is not None: raise ValueError(key + ' requires its optional module')
+            c[key] = None
+            continue
+        if not isinstance(value, dict): raise ValueError(key + ' requires explicit configuration')
+        value = dict(value)
+        allowed = {'root'} if key == 'handoff' else {'root', 'layout', 'by_software', 'categories', 'instructions'}
+        if set(value) - allowed: raise ValueError('unknown ' + key + ' option')
+        value['root'] = external_root(root, value.get('root'))
+        if key == 'work_files':
+            if value.get('layout') not in {'recommended', 'existing', 'custom'}:
+                raise ValueError('choose recommended, existing or custom work layout')
+            if value['layout'] == 'recommended':
+                value.setdefault('by_software', True)
+                value.setdefault('categories', WORK_CATEGORIES[:])
+            elif value['layout'] == 'custom':
+                if 'by_software' not in value or 'categories' not in value:
+                    raise ValueError('custom layout requires by_software and categories')
+                single_line(value.get('instructions'), 'custom layout instructions')
+            else:
+                if 'by_software' in value or 'categories' in value:
+                    raise ValueError('existing layout uses instructions without a new category scheme')
+                single_line(value.get('instructions'), 'existing layout instructions')
+            if 'by_software' in value and type(value['by_software']) is not bool:
+                raise ValueError('by_software must be boolean')
+            if 'categories' in value:
+                categories = value['categories']
+                if not isinstance(categories, list) or not categories:
+                    raise ValueError('categories must be a nonempty list')
+                for category in categories:
+                    single_line(category, 'category')
+                    if category in {'.', '..'} or any(c in category for c in '/\\'):
+                        raise ValueError('category must be a single folder name')
+                if len(set(categories)) != len(categories): raise ValueError('duplicate category')
+            if 'instructions' in value: single_line(value['instructions'], 'layout instructions')
+        c[key] = value
+    if c['work_files'] and c['handoff']:
+        work, handoff = Path(c['work_files']['root']), Path(c['handoff']['root'])
+        if work == handoff or handoff in work.parents:
+            raise ValueError('handoff must not contain or equal the work root')
+        # A shared work root may contain a dedicated handoff folder; it is excluded
+        # from classification and must not occupy a configured category directory.
+        if work in handoff.parents:
+            rel = handoff.relative_to(work)
+            if rel.parts[0] in c['work_files'].get('categories', []):
+                raise ValueError('handoff must not occupy a work category')
+
+
+def config_changes(root, old, new):
+    if not old: return []
+    old = config_for(root, 'existing', old)
+    stable = set(new) - {'modules', 'work_files', 'handoff'}
+    if any(old[k] != new[k] for k in stable):
+        raise ValueError('directory or authority configuration changed; review a separate migration')
+    if not set(old['modules']).issubset(new['modules']):
+        raise ValueError('module removal requires a separate reviewed migration; no automatic deletion')
+    for key in ['work_files', 'handoff']:
+        if old[key] is not None and old[key] != new[key]:
+            raise ValueError(key + ' configuration changed; review a separate migration')
+    return sorted(set(new['modules']) - set(old['modules']))
 
 
 def digest(data):
@@ -45,7 +131,7 @@ def fingerprint(path):
 def config_for(root, mode, custom):
     c = dict(custom)
     allowed = {'knowledge_roots', 'source_roots', 'governance_dir', 'existing_rules',
-               'full_index', 'modules', 'maintainer'}
+               'full_index', 'modules', 'maintainer', 'work_files', 'handoff'}
     if set(c) - allowed: raise ValueError('unknown configuration keys')
     if mode == 'new':
         c.setdefault('knowledge_roots', ['知识'])
@@ -65,8 +151,9 @@ def config_for(root, mode, custom):
         if not isinstance(c[key], list) or any(not isinstance(x, str) for x in c[key]):
             raise ValueError(f'{key} must be a list of strings')
         if len(set(c[key])) != len(c[key]): raise ValueError(f'duplicate {key}')
-    if set(c['modules']) - {'web', 'files', 'projects', 'collaboration', 'source-hashes'}:
+    if set(c['modules']) - {'web', 'files', 'projects', 'collaboration', 'source-hashes', 'work-files', 'handoff'}:
         raise ValueError('unknown optional module')
+    workflow_config(root, c)
     if 'source-hashes' in c['modules'] and not c['source_roots']:
         raise ValueError('source-hashes requires confirmed source_roots')
     paths = [*c['knowledge_roots'], *c['source_roots'], c['governance_dir']]
@@ -120,6 +207,7 @@ def render(root, mode, c):
 - 普通写入后检查变更页的来源、链接和索引；结构迁移或工具变化再全量检查。自动检查不能代替语义审查。
 '''
     files[rules+'/知识维护规范.md'] = (PACKAGE/'references/knowledge-model.md').read_text()
+    files[rules+'/验收规范.md'] = (PACKAGE/'references/health-check.md').read_text()
     files[rules+'/工具与Skill管理规范.md'] = (PACKAGE/'references/tool-portability.md').read_text()
     files[tools+'/链接检查.py'] = (PACKAGE/'scripts/health_check.py').read_text()
     files[tools+'/治理检查.py'] = (PACKAGE/'scripts/check_governance.py').read_text()
@@ -162,6 +250,21 @@ tags: []
         files[g+'/模板/专项记忆.md'] = (PACKAGE/'templates/project-memory.md').read_text()
     if 'source-hashes' in c['modules']:
         files[tools+'/原件校验.py'] = (PACKAGE/'scripts/source_integrity.py').read_text()
+    optional_links = []
+    if c['work_files']:
+        work = c['work_files']
+        selected = '# 本库选择\n\n' + '工作根目录：`' + work['root'] + '`。\n\n'
+        selected += '布局：' + work['layout'] + '。\n\n'
+        if work['layout'] != 'existing':
+            selected += '按软件分目录：' + ('是' if work['by_software'] else '否') + '。分类：' + '、'.join(work['categories']) + '。\n\n'
+        if work.get('instructions'): selected += '用户约定：' + work['instructions'] + '\n\n'
+        files[rules+'/工作文件管理规范.md'] = selected + (PACKAGE/'references/work-files.md').read_text()
+        optional_links.append(f'- 工作产出按[工作文件管理规范]({rules}/工作文件管理规范.md)保存；指定路径仅是约定，本次安装不在库外创建目录或移动旧文件。')
+    if c['handoff']:
+        selected = '# 本库选择\n\n中转站：`' + c['handoff']['root'] + '`。\n\n'
+        files[rules+'/交接中转站规范.md'] = selected + (PACKAGE/'references/handoff.md').read_text().replace('../templates/handoff.md', '../模板/交接说明.md')
+        files[g+'/模板/交接说明.md'] = (PACKAGE/'templates/handoff.md').read_text()
+        optional_links.append(f'- 跨Agent或窗口交接按[交接中转站规范]({rules}/交接中转站规范.md)，也可直接转贴；交接不代表入库、写入授权或自动清理。')
     block = f'''{START}
 ## 知识库治理入口
 
@@ -169,14 +272,16 @@ tags: []
 - 先读 `{rules}/结构约定.md` 及目标相关规范；现有明确规则与当前用户指令优先，冲突先核实。
 - 规范、模板、独立工具和自有Skill的正式内容沉淀在本库；遵循[工具与Skill管理规范]({rules}/工具与Skill管理规范.md)，从[工具索引]({tools}/工具索引.md)按任务查找。Agent安装入口指向库内正式包或使用有版本记录的同步副本，不各自维护。
 - 换Agent先读取本入口和相关规范、工具说明，检查依赖与权限后验证接手；只适配入口和运行环境，不重做已有内容。不自动发现AGENTS或Skill时显式引用库内入口。
-- 主要维护者：{c['maintainer']}。其他执行者默认读取分析，只有用户当次授权可写；任务结束授权失效。
+- 维护协调者：{c['maintainer']}。所有Agent默认读取分析，均须用户当次授权才能写入；维护称谓不赋予长期写权限，任务结束授权失效。
 - 查询与讨论不授权写入；完整方案获批后端到端落盘和复校，不逐步骤重复确认。
 - 原件不可覆盖，证据不足标待核；先读源查重再更新或建立真实关联，不堆聊天流水。
 - 写回前比对读取时文件SHA-256，变化则重读合并；新文件确认不存在。此为乐观检查，不是原子锁。
 - 不设置active/idle写锁、交接板或自动故障接管；若另一任务修改同一文件，协调范围和原执行者停止修改后再接续。
 - 适用模块：{', '.join(c['modules']) or '仅基础治理'}；只加载任务相关模块，不默认全量审计。
 - 工具：`python3 "{tools}/治理检查.py"`；有原件校验模块时按安装说明创建、核对基线。检查结果不代表事实正确。
+- 日常按[验收规范]({rules}/验收规范.md)选择实际检查范围；仅复制文件或脚本通过不代表入库完成。
 - 日常维护直接遵循本库规则，不必再调用初始化Skill；治理升级须重新生成差异方案并批准。
+{chr(10).join(optional_links)}
 {END}'''
     old = (root/'AGENTS.md').read_text() if (root/'AGENTS.md').is_file() else ''
     if START in old or END in old:
@@ -202,6 +307,8 @@ tags: []
 启用原件校验时，先运行 `原件校验.py prepare <库外候选JSON>`，核对清单后运行 `原件校验.py commit <同候选JSON>`，再运行 `原件校验.py check`。新增文件需要批准后准备新候选；既有原件改动或丢失不能通过重建基线掩盖。
 
 生成的规则与工具属于本库，可在授权下维护。再次安装遇到用户修改文件时会报冲突，先比较并合并；不强制恢复模板。安装方案目录保存before备份和after候选，包含原有规则内容，不公开上传。执行失败时检查方案的应用结果，不能宣称全部完成。
+
+工作文件与中转站模块独立可选，启用后只保存规范、配置与必要模板，库外文件夹在实际获授权任务中按需建立。安装器不写库外目录、不改Agent软件配置、不搬旧成果；复制知识库或换机器后先重新核对这些本机路径，不在云端创建同名路径冒充本机位置。
 '''
     return files
 
@@ -219,7 +326,7 @@ def plan(root, mode, custom, output):
     receipt = json.loads(receipt_bytes) if receipt_bytes is not None else {}
     if mode=='new' and not receipt and any(p.name not in {'.obsidian','.DS_Store'} for p in root.iterdir()):
         raise ValueError('new mode requires empty vault; existing content must use existing mode')
-    if receipt and receipt.get('config') != c: raise ValueError('configuration changed; review existing installation before migration')
+    additions = config_changes(root, receipt.get('config'), c)
     files = render(root,mode,c)
     for rel, original in snapshots.items():
         if read(local(root,rel)) != original:
@@ -262,10 +369,15 @@ def plan(root, mode, custom, output):
             raise ValueError('input changed during planning: '+rel)
     data={'version':VERSION,'root':str(root),'mode':mode,'config':c,'actions':actions,
           'dependencies':dependencies,'conflicts':conflicts,
+          'added_modules':additions,
           'root_entries':sorted(p.name for p in root.iterdir())}
     (output/'plan.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
     (output/'方案.md').write_text('# 治理安装方案\n\n根目录：'+str(root)+'\n\n模式：'+mode+'\n\n'+
         '\n'.join('- '+x['action']+'：'+x['path'] for x in actions)+
+        '\n\n新增可选模块：'+(', '.join(additions) or '无（或首次安装）')+
+        '\n\n工作文件选择：'+json.dumps(c['work_files'],ensure_ascii=False)+
+        '\n\n中转站选择：'+json.dumps(c['handoff'],ensure_ascii=False)+
+        '\n\n本次仅写上述库内文件；库外路径只记录，不创建目录、不迁移文件、不修改Agent配置。'+
         '\n\n逐项查看after候选和before备份，核对AGENTS与已有规则语义冲突。确认后才apply；有conflict不可执行。\n')
     return data
 
