@@ -1,8 +1,8 @@
 ---
 name: acs-knowledge-governance-bootstrap
-description: 为本地Markdown或Obsidian知识库一次性初始化或适配治理体系，把规范、模板、独立工具和自有Skill管理规则沉淀到库内，支持不同Agent接手。新库使用中文目录，已有库保留原结构；仅初始化、接管配置或治理升级时使用，不接管日常查询与入库。
+description: 为本地Markdown或Obsidian知识库初始化或适配治理体系，沉淀规范、模板和工具并支持不同Agent接手。已有库默认沿用结构，可选按获批方案迁移旧文件；用于初始化、接管配置或治理升级，不接管日常查询与入库。
 metadata:
-  version: "1.3.1"
+  version: "1.4.0"
 ---
 
 # 知识库治理初始化与适配
@@ -20,7 +20,7 @@ metadata:
 同时确认本库自有Skill的正式位置及工具索引；有相关Agent安装目录时仅在可访问的授权范围内盘点，核对版本差异。没有现成Skill不创建空包；不自动搬迁既有安装、复制平台内置功能或凭据。已有等价库内位置优先复用，在接手入口注明。
 
 - **新库**：默认中文目录 `知识/`、`原始材料/`、`索引/`、`规范与工具/`；按用途命名业务目录，不复制开发者行业、机构或个人路径。AGENTS.md等固定文件名保留。空的Obsidian配置目录不算业务内容。
-- **已有库**：沿用原目录、文件名、页面字段和索引。明确映射知识和来源目录、现有权威文件与索引；不强制改中文、不批量移动。没有来源目录或索引时先说明需求，未确认不建立。已有等价工具与规范应复用或合并，不制造第二套权威。
+- **已有库**：默认沿用原目录、文件名、页面字段和索引。明确映射知识和来源目录、现有权威文件与索引；不强制改中文、不擅自批量移动。没有来源目录或索引时先说明需求，未确认不建立。已有等价工具与规范应复用或合并，不制造第二套权威。
 
 ## 可选工作方式
 
@@ -48,9 +48,15 @@ python3 scripts/bootstrap.py plan /absolute/vault --mode existing --config /abso
 
 生成器提供最小起点，不代替适配判断。未知字段、目录交叠、路径越界、符号链接、已有文件冲突会拒绝。索引须为文件路径，不能占用目录或放入原始材料区。若目标已存在同名规则或自定义格式，先比较并沿用现有文件；必要的人工合并按 [冲突与升级](references/onboarding.md) 操作，不绕过冲突直接覆盖。
 
+## 可选历史迁移
+
+单独确认“旧文件是否按新规范迁移”：默认暂不迁移，只让新产出按新规范存放；也可选择迁移指定范围。用户已明确选择的不再问。同意新规则不等于同意搬旧文件，暂不迁移不阻塞新规则启用；需明确新旧并存边界，旧资料仍可查找。
+
+选择迁移时读[历史迁移流程](references/migration.md)，先给出完整源→目标映射、冲突处理、入口修复和核验方案，获同意后由Agent实际执行到验收，不只输出建议。该流程独立于bootstrap安装器，可与治理方案一并批准；写入前按两者依赖安排顺序，迁移后的实际路径必须与最终规则一致。
+
 ## 确认后安装
 
-用户批准具体完整方案后执行；已明确批准的步骤不重复询问。授权只覆盖本次治理文件和工具，不包括业务资料迁移、外部账号调用、发布或后台监控。
+用户批准具体完整方案后执行；已明确批准的步骤不重复询问。安装授权只覆盖本次治理文件和工具；旧文件迁移须明确选中并批准具体方案。外部账号调用、发布或后台监控不由安装授权自动包含。
 
 ```bash
 python3 scripts/bootstrap.py apply /absolute/temp/plan/plan.json --approved
@@ -78,6 +84,7 @@ python3 scripts/bootstrap.py apply /absolute/temp/plan/plan.json --approved
 - [验收范围](references/health-check.md)
 - [工作文件管理](references/work-files.md)（选择work-files时读取）
 - [交接中转站](references/handoff.md)（选择handoff时读取）
+- [旧文件迁移](references/migration.md)（用户选择迁移时读取）
 - `scripts/bootstrap.py`：库外方案、指纹预检及安装。
 - `scripts/scan_knowledge_base.py`：只读结构观察。
 - `scripts/health_check.py`、`scripts/check_governance.py`、`scripts/source_integrity.py`：安装时复制到目标库的独立工具。

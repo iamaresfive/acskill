@@ -11,7 +11,7 @@ import tempfile
 PACKAGE = Path(__file__).resolve().parents[1]
 START = '<!-- acs-governance:start -->'
 END = '<!-- acs-governance:end -->'
-VERSION = '1.3.1'
+VERSION = '1.4.0'
 WORK_CATEGORIES = ['文档报告', '表格数据', '图片设计', '音视频', '代码工具', '资料整理']
 
 
@@ -208,6 +208,7 @@ def render(root, mode, c):
 '''
     files[rules+'/知识维护规范.md'] = (PACKAGE/'references/knowledge-model.md').read_text()
     files[rules+'/验收规范.md'] = (PACKAGE/'references/health-check.md').read_text()
+    files[rules+'/历史文件迁移规范.md'] = (PACKAGE/'references/migration.md').read_text()
     files[rules+'/工具与Skill管理规范.md'] = (PACKAGE/'references/tool-portability.md').read_text()
     files[tools+'/链接检查.py'] = (PACKAGE/'scripts/health_check.py').read_text()
     files[tools+'/治理检查.py'] = (PACKAGE/'scripts/check_governance.py').read_text()
@@ -258,7 +259,7 @@ tags: []
         if work['layout'] != 'existing':
             selected += '按软件分目录：' + ('是' if work['by_software'] else '否') + '。分类：' + '、'.join(work['categories']) + '。\n\n'
         if work.get('instructions'): selected += '用户约定：' + work['instructions'] + '\n\n'
-        files[rules+'/工作文件管理规范.md'] = selected + (PACKAGE/'references/work-files.md').read_text()
+        files[rules+'/工作文件管理规范.md'] = selected + (PACKAGE/'references/work-files.md').read_text().replace('(migration.md)', '(历史文件迁移规范.md)')
         optional_links.append(f'- 工作产出按[工作文件管理规范]({rules}/工作文件管理规范.md)保存；指定路径仅是约定，本次安装不在库外创建目录或移动旧文件。')
     if c['handoff']:
         selected = '# 本库选择\n\n中转站：`' + c['handoff']['root'] + '`。\n\n'
@@ -271,6 +272,7 @@ tags: []
 - 工作区为本AGENTS.md所在知识库，所有路径相对库根，不套用开发者路径或账号。
 - 先读 `{rules}/结构约定.md` 及目标相关规范；现有明确规则与当前用户指令优先，冲突先核实。
 - 知识库管理、工作文件夹、工作产出与中转站规则分别核对；遇到冲突先说明原规则、整改建议和影响，获用户对具体方案的同意后才改，未同意部分保持原样。
+- 旧文件迁移独立可选、默认关闭；选择指定范围并批准具体映射后，按[历史文件迁移规范]({rules}/历史文件迁移规范.md)实际执行与验收。同意新规范不等于同意搬旧文件。
 - 规范、模板、独立工具和自有Skill的正式内容沉淀在本库；遵循[工具与Skill管理规范]({rules}/工具与Skill管理规范.md)，从[工具索引]({tools}/工具索引.md)按任务查找。Agent安装入口指向库内正式包或使用有版本记录的同步副本，不各自维护。
 - 换Agent先读取本入口和相关规范、工具说明，检查依赖与权限后验证接手；只适配入口和运行环境，不重做已有内容。不自动发现AGENTS或Skill时显式引用库内入口。
 - 维护协调者：{c['maintainer']}。所有Agent默认读取分析，均须用户当次授权才能写入；维护称谓不赋予长期写权限，任务结束授权失效。
