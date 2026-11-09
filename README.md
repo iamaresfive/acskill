@@ -2,15 +2,14 @@
 
 这是我持续维护的 AI 工具库。每个工具叫一个 **Skill**，可以理解成给 AI 用的工作说明书。
 
-目前有七个工具，按你要做的事选择即可：
+目前有六个工具，按你要做的事选择即可：
 
 | 你想做什么 | 工具 | 说明入口 |
 | --- | --- | --- |
 | 给知识库建立目录和管理规则 | 知识库初始化 · `acs-knowledge-governance-bootstrap` | [查看说明](skill/acs-knowledge-governance-bootstrap/README.md) |
 | 把本地音视频整理成文字 | 音视频文字提取 · `acs-video-script-extractor` | [查看说明](skill/acs-video-script-extractor/README.md) |
 | 用本人授权声音给文案配音 | 本人声音克隆配音 · `acs-voice-clone` | [查看说明](skill/acs-voice-clone/README.md) |
-| 判断选题、开头与读者的关系 | 内容吸引力审核 · `acs-content-appeal-review` | [查看说明](skill/acs-content-appeal-review/README.md) |
-| 审核文章或口播稿 | 个人文章与口播稿审核 · `acs-content-review` | [查看说明](skill/acs-content-review/README.md) |
+| 审核文章或口播稿 | 作者内容审核 · `acs-author-review` | [查看说明](skill/acs-author-review/README.md) |
 | 把定稿做成公众号发布包 | 公众号定稿发布包 · `acs-wechat-publish-pack` | [查看说明](skill/acs-wechat-publish-pack/README.md) |
 | 检索并整理公考培训行业消息 | 公考培训行业动态简报 · `acs-industry-brief` | [查看说明](skill/acs-industry-brief/README.md) |
 
@@ -57,17 +56,16 @@ AI 工具需要支持加载或明确读取 Skill、访问本地文件和执行�
 
 [详细说明](skill/acs-voice-clone/README.md) · [环境与初始化](skill/acs-voice-clone/references/runtime.md)
 
-### 4–6. 内容创作工具
+### 4–5. 内容创作工具
 
 | 创作步骤 | Skill | 用途 |
 | --- | --- | --- |
-| 讨论主线、检查入口 | [acs-content-appeal-review](skill/acs-content-appeal-review/README.md) | 检查目标读者、阅读收获、继续关注与商业承接理由 |
-| 审核修改 | [acs-content-review](skill/acs-content-review/README.md) | 核对事实、主线与逻辑，保留作者表达 |
+| 审核修改 | [acs-author-review](skill/acs-author-review/README.md) | 核对事实、主线与表达，区分问题轻重，按本篇任务处理商业承接 |
 | 定稿后制作 | [acs-wechat-publish-pack](skill/acs-wechat-publish-pack/README.md) | 制作可复制图文、封面和手机预览，运行包内检查 |
 
 [完整流程与具体案例](docs/公众号创作流程与Skill.md)包含日常积累素材、提出观察、核对材料、起草和复盘，以及[飞书方法文档](https://qs4978dogu.feishu.cn/docx/QKNbdUiAWoPEp0xHZgKcv0VBnCc)的对应入口。这是现行工具的分工说明，不把后来沉淀的Skill说成历史文章当时全部调用过。
 
-### 7. 公考培训行业动态简报
+### 6. 公考培训行业动态简报
 
 让AI检索行业公开信息、逐条读源，按监管与政策、市场与同业、网络舆情生成HTML和证据JSON。信息不足如实说明；不需要个人知识库或飞书连接，需要联网、文件及Python执行能力。
 
@@ -75,7 +73,7 @@ AI 工具需要支持加载或明确读取 Skill、访问本地文件和执行�
 
 ## 仓库目录
 
-下面只展示主要入口，七个工具使用同一层级：
+下面只展示主要入口，六个工具使用同一层级：
 
 ```text
 acskill/
@@ -86,8 +84,7 @@ acskill/
     ├── acs-knowledge-governance-bootstrap/   # 知识库初始化
     ├── acs-video-script-extractor/           # 音视频文字提取
     ├── acs-voice-clone/                      # 本人声音克隆配音
-    ├── acs-content-appeal-review/            # 内容吸引力审核
-    ├── acs-content-review/                   # 个人文章与口播稿审核
+    ├── acs-author-review/                    # 作者内容审核
     ├── acs-wechat-publish-pack/              # 公众号定稿发布包
     └── acs-industry-brief/                   # 公考培训行业动态简报
 ```

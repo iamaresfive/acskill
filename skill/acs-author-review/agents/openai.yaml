@@ -1,0 +1,4 @@
+interface:
+  display_name: "作者内容审核"
+  short_description: "审核文章与口播的事实、主线和表达，区分问题轻重，保留作者判断与口吻"
+  default_prompt: "使用 $acs-author-review 审核这篇稿件，先判断主线是否成立，再区分必要修改与可选优化，不擅自重写全文。"

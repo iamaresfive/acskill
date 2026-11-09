@@ -1,4 +1,0 @@
-interface:
-  display_name: "内容吸引力审核"
-  short_description: "检查文章与口播的开头、目标读者和关注理由，保留个人立场，不预测流量或强行找问题"
-  default_prompt: "使用 $acs-content-appeal-review 审核这篇内容的吸引力，先按我的目标读者判断，只提真正值得改的地方。"
